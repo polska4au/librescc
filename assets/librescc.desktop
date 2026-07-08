@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=LibreSCC
+Comment=MIDI to SCC-inspired chiptune player
+Exec=librescc %f
+Icon=librescc
+Terminal=false
+Categories=AudioVideo;Audio;Midi;
+MimeType=audio/midi;audio/x-midi;

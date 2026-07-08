@@ -1,0 +1,33 @@
+.TH LIBRESCC 1 "2026" "librescc 1.0.0" "User Commands"
+.SH NAME
+librescc \- MIDI to SCC-inspired chiptune player
+.SH SYNOPSIS
+.B librescc
+[\fIFILE.mid\fR]
+.SH DESCRIPTION
+LibreSCC is a desktop application that converts Standard MIDI Files into
+real-time synthesized chiptune audio, in the style of Konami's SCC sound
+chip. It parses MIDI internally (no external playback tools), renders
+audio in real time through PortAudio using a wavetable synth engine with
+square, triangle, sine, and noise voices, ADSR envelopes, per-voice
+low-pass filtering, and priority-based voice stealing across up to 32
+configurable voices, shown as a two-row, 16-channel-per-row matrix with
+a mute toggle on every channel.
+.SH USAGE
+Launch LibreSCC and either pass a MIDI file as an argument or drag-and-drop
+a
+.B .mid
+file onto the window (the header bar's Open button also has an Open
+Recent submenu). Use the Play/Stop buttons to control playback, the
+polyphony slider to change the voice limit, the per-channel mute
+toggles to silence individual channels instantly, the Config dialog to
+switch between waveform presets, and the Export WAV / Export MP3
+buttons to render the currently loaded file to an audio file. MP3
+export requires LibreSCC to have been built with libmp3lame available;
+otherwise the button is disabled.
+.SH OPTIONS
+.TP
+.I FILE.mid
+Optional path to a MIDI file to load on startup.
+.SH AUTHOR
+LibreSCC contributors.

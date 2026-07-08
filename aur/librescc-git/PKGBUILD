@@ -1,0 +1,34 @@
+# Maintainer: Your Name <your.email@example.com>
+pkgname=librescc-git
+pkgver=1.0.0.r0.g0000000
+pkgrel=1
+pkgdesc="MIDI to SCC-inspired chiptune player with real-time synthesis and a GTK4 GUI (git version)"
+arch=('x86_64' 'aarch64')
+url="https://github.com/YOURUSER/librescc"
+license=('MIT')
+depends=('gtk4' 'portaudio' 'lame')
+makedepends=('git' 'cmake' 'gcc' 'pkgconf')
+provides=('librescc')
+conflicts=('librescc')
+source=("$pkgname::git+https://github.com/YOURUSER/librescc.git")
+sha256sums=('SKIP')
+
+pkgver() {
+    cd "$pkgname"
+    git describe --long --tags --always | sed 's/^v//;s/-/.r/;s/-g/.g/'
+}
+
+build() {
+    cmake -B build -S "$pkgname" \
+        -DCMAKE_BUILD_TYPE=Release \
+        -DCMAKE_INSTALL_PREFIX=/usr
+    cmake --build build --parallel
+}
+
+check() {
+    ctest --test-dir build --output-on-failure
+}
+
+package() {
+    DESTDIR="$pkgdir" cmake --install build
+}
