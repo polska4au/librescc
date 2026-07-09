@@ -43,18 +43,23 @@ sudo dnf install gcc-c++ cmake pkgconf-pkg-config gtk4-devel portaudio-devel lam
 
 ### Installation
 
-Arch Linux:
-
-```bash
-yay -S librescc
-```
-
-Manual:
+Manual (Arch Linux):
 
 ```bash
 git clone https://github.com/polska4au/librescc.git
 cd librescc
 makepkg -si
 ```
+
+Manual (Debian, Ubuntu, Fedora, whatever else.):
+
+```bash
+git clone https://github.com/polska4au/librescc.git
+cd librescc
+cmake -B build -S . -DCMAKE_BUILD_TYPE=Release
+cmake --build build --parallel
+./build/librescc
+```
+
 
 This app was made with the help of Claude.
