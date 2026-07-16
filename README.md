@@ -43,6 +43,11 @@ sudo dnf install gcc-c++ cmake pkgconf-pkg-config gtk4-devel portaudio-devel lam
 
 ### Installation
 
+Arch Linux:
+```bash
+yay -S librescc
+```
+
 Build from source:
 
 ```bash
