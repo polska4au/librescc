@@ -1,0 +1,70 @@
+name: Windows build
+
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up MSYS2 (MinGW64) with build deps
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: MINGW64
+          update: true
+          install: >-
+            mingw-w64-x86_64-toolchain
+            mingw-w64-x86_64-cmake
+            mingw-w64-x86_64-ninja
+            mingw-w64-x86_64-gtk4
+            mingw-w64-x86_64-portaudio
+            mingw-w64-x86_64-lame
+            mingw-w64-x86_64-pkgconf
+
+      - name: Configure
+        run: |
+          cmake -B build -S . -G Ninja -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build
+        run: |
+          cmake --build build
+
+      - name: Run tests
+        run: |
+          ctest --test-dir build --output-on-failure
+
+      - name: Bundle exe with its runtime DLLs
+        run: |
+          mkdir -p dist
+          cp build/librescc.exe dist/
+          ldd build/librescc.exe | grep -i mingw64 | awk '{print $3}' | sort -u | while read -r dll; do
+            cp -v "$dll" dist/ || true
+          done
+          mkdir -p dist/share/glib-2.0/schemas
+          cp /mingw64/share/glib-2.0/schemas/gschemas.compiled dist/share/glib-2.0/schemas/ || true
+          cp -r /mingw64/share/icons dist/share/ || true
+
+      - name: Zip artifact
+        run: |
+          cd dist && 7z a -r ../LibreSCC-windows.zip .
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: LibreSCC-windows
+          path: LibreSCC-windows.zip
+
+      - name: Attach to release
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: LibreSCC-windows.zip
